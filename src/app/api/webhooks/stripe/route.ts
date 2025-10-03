@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import Stripe from "stripe";
 import { stripe } from "@/lib/payments/stripe";
 import { db } from "@/lib/db";
+import { sendInvoiceEmail } from "@/lib/email/resend";
 
 export async function POST(req: NextRequest) {
   const body = await req.text();
@@ -38,6 +39,10 @@ export async function POST(req: NextRequest) {
         where: { id: orderId },
         data: { paymentStatus: "PAID" },
       });
+
+      // Send invoice email after successful payment
+      await sendInvoiceEmail(orderId);
+
     } catch (error) {
       console.error(`Failed to update order ${orderId} to PAID`, error);
       // Don't fail the webhook, as Stripe will retry. Log the error for investigation.

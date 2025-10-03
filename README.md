@@ -17,6 +17,8 @@ This project is a modern web application built with the Next.js 15 App Router, T
 - **Database**: [PostgreSQL](https://www.postgresql.org/) with [Prisma](https://www.prisma.io/)
 - **Authentication**: [NextAuth.js](https://next-auth.js.org/) (Auth.js v5)
 - **Payments**: [Stripe](https://stripe.com/)
+- **Transactional Email**: [Resend](https://resend.com/)
+- **Storage**: [AWS S3](https://aws.amazon.com/s3/) (or any S3-compatible service like Cloudflare R2)
 
 ## Getting Started
 
@@ -27,7 +29,7 @@ To get the development server running, follow these steps:
     pnpm install
     ```
 2.  **Set up environment variables**:
-    Copy the `.env.example` file to a new file named `.env` and fill in the required values (database credentials, auth secrets, Stripe keys, etc.).
+    Copy the `.env.example` file to a new file named `.env` and fill in the required values (database credentials, auth secrets, payment/email/storage keys, etc.).
     ```bash
     cp .env.example .env
     ```
@@ -82,6 +84,13 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - A multi-step checkout process that integrates with Stripe for payments.
 - Server-side validation of cart contents and pricing.
 - Webhook endpoint to handle payment confirmation from Stripe.
+
+### Downloads & Invoicing
+- Securely download purchased products via signed URLs from an S3-compatible bucket.
+- Download access is limited by a configurable number of attempts and a 7-day expiration policy.
+- A dedicated "My Downloads" page (`/download`) lists all purchased items.
+- Transactional invoice emails are sent automatically via Resend upon successful payment.
+- Users can download a PDF version of their invoice.
 
 ## Quality Assurance: CI-Only Workflow
 
