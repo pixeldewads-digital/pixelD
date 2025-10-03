@@ -97,6 +97,7 @@ model Order {
   provider      PaymentProvider
   providerRef   String?
   couponCode    String?
+  idempotencyKey String?  @unique
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

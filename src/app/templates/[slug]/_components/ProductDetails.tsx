@@ -8,6 +8,8 @@ import { PriceBadge } from "@/components/products/PriceBadge";
 import { LicenseBadge } from "@/components/products/LicenseBadge";
 import { Product } from "@prisma/client";
 import { cn } from "@/lib/utils";
+import { useCartStore } from "@/lib/store/cart";
+import { toast } from "sonner";
 
 interface ProductDetailsProps {
   product: Product;
@@ -15,6 +17,17 @@ interface ProductDetailsProps {
 
 export function ProductDetails({ product }: ProductDetailsProps) {
   const [selectedImage, setSelectedImage] = useState(product.coverImageUrl);
+  const { addItem } = useCartStore();
+
+  const handleAddToCart = () => {
+    addItem({
+      id: product.id,
+      title: product.title,
+      priceCents: product.priceCents,
+      coverImageUrl: product.coverImageUrl,
+    });
+    toast.success(`${product.title} has been added to your cart.`);
+  };
 
   return (
     <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
@@ -65,7 +78,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
           </div>
         </div>
 
-        <Button size="lg" className="mt-4">
+        <Button size="lg" className="mt-4" onClick={handleAddToCart}>
           Add to Cart
         </Button>
       </div>
