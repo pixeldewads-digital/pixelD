@@ -120,6 +120,7 @@ model Review {
   productId String
   rating    Int
   comment   String
+  visible   Boolean  @default(true)
   createdAt DateTime @default(now())
 }
 
