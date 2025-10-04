@@ -1,7 +1,20 @@
 import type { NextConfig } from "next";
 
+const withAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
+
+const withPWA = require("next-pwa")({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === "development",
+});
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    optimizePackageImports: ["lucide-react"],
+  },
 };
 
-export default nextConfig;
+export default withPWA(withAnalyzer(nextConfig));

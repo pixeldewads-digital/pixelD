@@ -6,6 +6,7 @@ import { Product } from "@prisma/client";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -14,6 +15,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+
+const allFormats = ["FIGMA", "CANVA", "PDF", "PSD"];
 
 export function ProductForm({ product }: { product?: Product | null }) {
   const [error, action] = useFormState(
@@ -70,6 +73,23 @@ export function ProductForm({ product }: { product?: Product | null }) {
           <div className="text-destructive">{error.description}</div>
         )}
       </div>
+       <div className="space-y-2">
+        <Label>Formats</Label>
+        <div className="flex gap-4">
+            {allFormats.map(format => (
+                <div key={format} className="flex items-center gap-2">
+                    <Checkbox
+                        id={`format-${format}`}
+                        name="formats"
+                        value={format}
+                        defaultChecked={product?.formats.includes(format)}
+                    />
+                    <Label htmlFor={`format-${format}`}>{format}</Label>
+                </div>
+            ))}
+        </div>
+        {error.formats && <div className="text-destructive">{error.formats}</div>}
+      </div>
       <div className="space-y-2">
         <Label htmlFor="coverImageUrl">Cover Image URL</Label>
         <Input
@@ -81,6 +101,18 @@ export function ProductForm({ product }: { product?: Product | null }) {
         />
         {error.coverImageUrl && (
           <div className="text-destructive">{error.coverImageUrl}</div>
+        )}
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="galleryUrls">Gallery URLs</Label>
+        <Textarea
+          id="galleryUrls"
+          name="galleryUrls"
+          defaultValue={product?.galleryUrls.join(",") || ""}
+          placeholder="Enter URLs separated by commas"
+        />
+        {error.galleryUrls && (
+          <div className="text-destructive">{error.galleryUrls}</div>
         )}
       </div>
       <div className="space-y-2">

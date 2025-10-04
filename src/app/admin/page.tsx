@@ -131,6 +131,31 @@ export default async function AdminDashboardPage() {
           </CardContent>
         </Card>
       </div>
+      <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-7">
+        <Card className="col-span-4">
+          <CardHeader>
+            <CardTitle>Sales Chart</CardTitle>
+          </CardHeader>
+          <CardContent className="pl-2">
+            <div className="h-80 w-full flex items-center justify-center text-muted-foreground">
+              [Chart Placeholder]
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="col-span-3">
+          <CardHeader>
+            <CardTitle>Recent Sales</CardTitle>
+            <CardDescription>
+              You made 265 sales this month.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-muted-foreground">
+              [Recent Sales List Placeholder]
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 }
