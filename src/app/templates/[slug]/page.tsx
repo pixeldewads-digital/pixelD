@@ -5,6 +5,7 @@ import { ProductDetails } from "./_components/ProductDetails";
 import { ReviewsSection } from "./_components/ReviewsSection";
 import { RelatedProducts } from "./_components/RelatedProducts";
 import { Suspense } from "react";
+import { productJsonLd } from "@/lib/seo/jsonld";
 
 interface ProductDetailPageProps {
   params: {
@@ -51,6 +52,10 @@ export default async function ProductDetailPage({
 
   return (
     <div className="container my-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd(product)) }}
+      />
       <ProductDetails product={product} />
       <ReviewsSection reviews={product.reviews} />
       <Suspense fallback={<div className="mt-12">Loading related products...</div>}>
