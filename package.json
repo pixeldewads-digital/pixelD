@@ -5,24 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "prestart": "prisma migrate deploy && prisma generate",
+    "start": "next start -p $PORT",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "biome check .",
-    "lint:fix": "biome check --write .",
     "test": "vitest run --coverage",
     "e2e": "playwright test",
-    "check": "pnpm lint && pnpm typecheck && pnpm test",
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev --name init",
-    "db:deploy": "prisma migrate deploy",
-    "db:seed": "tsx prisma/seed.ts",
-    "db:reset": "prisma migrate reset --force --skip-generate --skip-seed",
-    "dev-seed": "pnpm db:migrate && pnpm db:seed && pnpm dev",
-    "blog:dev": "node scripts/validate-blog.mjs --watch",
-    "blog:check": "node scripts/validate-blog.mjs --strict",
-    "analyze": "ANALYZE=true next build",
-    "test:ui": "vitest --ui",
-    "e2e:headed": "playwright test --headed"
+    "check": "pnpm lint && pnpm typecheck && pnpm test"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
