@@ -17,6 +17,7 @@
     "db:deploy": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts",
     "db:reset": "prisma migrate reset --force --skip-generate --skip-seed",
+    "dev-seed": "pnpm db:migrate && pnpm db:seed && pnpm dev",
     "blog:dev": "node scripts/validate-blog.mjs --watch",
     "blog:check": "node scripts/validate-blog.mjs --strict",
     "analyze": "ANALYZE=true next build",

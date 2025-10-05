@@ -1,54 +1,56 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Admin Panel - Product Management", () => {
-  // Note: This test assumes an admin user exists and environment variables
-  // for authentication are set up in the test environment.
-  // For a real-world scenario, you might use a separate test user or mock auth.
-
+  const adminEmail = process.env.ADMIN_TEST_EMAIL || "admin@example.com";
   const productName = `Test Product ${Date.now()}`;
   const productSlug = `test-product-${Date.now()}`;
+
+  // This test requires the app to be running and for environment variables
+  // for an admin user to be configured.
+  test.beforeEach(async ({ page }) => {
+    // Simulate login via magic link.
+    // In a real-world CI, you would likely use a programmatic way to get a session token
+    // and set it in the browser context to bypass the UI login for speed and reliability.
+    // For this test, we'll simulate the UI flow as much as possible.
+    await page.goto("/auth/signin");
+    await page.getByLabel("Email").fill(adminEmail);
+    await page.getByRole("button", { name: "Sign in with Email" }).click();
+
+    // Since we can't click the magic link from an email in this environment,
+    // we'll navigate to the admin page after initiating the sign-in.
+    // This assumes the magic link would grant a valid session.
+    await page.goto("/admin");
+    await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
+  });
 
   test("should allow an admin to create, publish, and see a new product", async ({
     page,
   }) => {
-    // 1. Login as Admin
-    await page.goto("/auth/signin");
-    await page.getByLabel("Email").fill(process.env.ADMIN_TEST_EMAIL || "admin@example.com");
-    await page.getByRole("button", { name: "Sign in with Email" }).click();
-
-    // In a real test, you'd handle the magic link.
-    // For this test, we'll assume a simplified or mocked login that redirects.
-    // As a placeholder, we will navigate directly to the admin dashboard after initiating login.
-    await page.goto("/admin");
-    await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
-
-    // 2. Navigate to Products and Create a New One
+    // 1. Navigate to Products and Create a New One
     await page.getByRole("link", { name: "Products" }).click();
     await expect(page.getByRole("heading", { name: "Products" })).toBeVisible();
     await page.getByRole("link", { name: "Add Product" }).click();
     await expect(page.getByRole("heading", { name: "Add New Product" })).toBeVisible();
 
-    // 3. Fill out the product form
+    // 2. Fill out the product form
     await page.getByLabel("Title").fill(productName);
     await page.getByLabel("Slug").fill(productSlug);
-    await page.getByLabel("Price (in Cents)").fill("1999");
-    await page.getByLabel("Description").fill("This is a test description for an E2E test product.");
-    await page.getByLabel("Cover Image URL").fill("https://example.com/test-cover.jpg");
+    await page.getByLabel("Price (in Cents)").fill("2999");
+    await page.getByLabel("Description").fill("A detailed description for the test product.");
+    await page.getByLabel("Cover Image URL").fill("https://example.com/e2e-cover.png");
     await page.getByLabel("File Key (R2/S3)").fill(`products/${productSlug}.zip`);
 
-    await page.getByRole('combobox', { name: 'Category' }).click();
-    await page.getByLabel('Social Media').click();
+    // Select formats
+    await page.getByLabel("FIGMA").check();
+    await page.getByLabel("CANVA").check();
 
-    await page.getByRole('combobox', { name: 'License' }).click();
-    await page.getByLabel('Commercial').click();
-
-    // For formats, this depends on the implementation. Assuming a simple text input for now.
-    // If it's a multi-select, this would need to be adjusted.
-    // The current form implementation is missing a 'formats' field. We will skip this for now.
+    // Select category and license
+    await page.locator('select[name="category"]').selectOption("SOCIAL_MEDIA");
+    await page.locator('select[name="license"]').selectOption("COMMERCIAL");
 
     await page.getByRole("button", { name: "Save" }).click();
 
-    // 4. Verify Product is Created and then Publish It
+    // 3. Verify Product is Created and then Publish It
     await expect(page.getByRole("heading", { name: "Products" })).toBeVisible();
     await expect(page.getByText(productName)).toBeVisible();
 
@@ -56,7 +58,7 @@ test.describe("Admin Panel - Product Management", () => {
     await productRow.getByRole("button", { name: "Actions" }).click();
     await page.getByRole("menuitem", { name: "Publish" }).click();
 
-    // 5. Verify the Product Appears on the Public Catalog
+    // 4. Verify the Product Appears on the Public Catalog
     await page.goto("/templates");
     await expect(page.getByText(productName)).toBeVisible();
   });
