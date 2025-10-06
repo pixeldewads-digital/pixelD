@@ -39,8 +39,8 @@ To get the development server running locally, follow these steps:
     ```bash
     cp .env.example .env
     ```
-3.  **Run database migrations**:
-    This will set up your database schema based on the Prisma model.
+3.  **Run database migrations (for local development)**:
+    This command applies any pending database schema changes. For production deployments on platforms like Railway, this is handled automatically by the `prestart` script.
     ```bash
     pnpm db:migrate
     ```
