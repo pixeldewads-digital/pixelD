@@ -56,6 +56,22 @@ To get the development server running locally, follow these steps:
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Deployment
+
+### Vercel
+
+For detailed instructions on deploying to Vercel, see our [Vercel Deployment Guide](./docs/DEPLOY.md).
+
+### Railway
+
+This project is configured for seamless deployment on [Railway](https://railway.app/).
+
+1.  **Connect Your Repo**: Connect your GitHub repository to a new project on Railway.
+2.  **Add Database**: Add a PostgreSQL service to your project. Railway will automatically inject the `DATABASE_URL` environment variable into your application's service.
+3.  **Set Environment Variables**: In your service settings, navigate to the "Variables" tab and add all the required environment variables from the `.env.example` file.
+4.  **Deploy**: Railway will automatically detect the `Dockerfile` and build and deploy your application. The `prestart` script in `package.json` will handle database migrations automatically on every new deployment.
+5.  **Update URLs**: Once your application has a public domain, make sure to update the `NEXTAUTH_URL` and `NEXT_PUBLIC_SITE_URL` environment variables to match.
+
 ## Documentation
 
 For more detailed information about the project, please refer to the documentation in the `docs/` directory:
