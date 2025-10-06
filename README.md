@@ -35,12 +35,12 @@ To get the development server running locally, follow these steps:
     pnpm install
     ```
 2.  **Set up environment variables**:
-    Copy the `.env.example` file to a new file named `.env` and fill in the required values (database credentials, auth secrets, API keys, etc.).
+    Copy the `.env.example` file to a new file named `.env` and fill in the required values.
     ```bash
     cp .env.example .env
     ```
-3.  **Run database migrations (for local development)**:
-    This command applies any pending database schema changes. For production deployments on platforms like Railway, this is handled automatically by the `prestart` script.
+3.  **Run database migrations**:
+    This command applies any pending database schema changes to your local database.
     ```bash
     pnpm db:migrate
     ```
@@ -58,43 +58,41 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Deployment
 
-### Vercel
+This project is optimized for deployment on modern hosting platforms like **Vercel** and **Railway**.
 
-For detailed instructions on deploying to Vercel, see our [Vercel Deployment Guide](./docs/DEPLOY.md).
+### Deploying to Railway
 
-### Railway
+Railway is the recommended platform for a seamless deployment experience, thanks to its integrated support for both the application and the PostgreSQL database.
 
-This project is configured for seamless deployment on [Railway](https://railway.app/).
+1.  **Connect Your Repo**: In your Railway dashboard, create a new project and connect it to your GitHub repository.
+2.  **Add PostgreSQL Plugin**: Within your project, add a "PostgreSQL" service. Railway will automatically provision a database and inject the `DATABASE_URL` environment variable into your application service.
+3.  **Set Environment Variables**: In your application service settings, navigate to the "Variables" tab and add all the required environment variables from the `.env.example` file (excluding `DATABASE_URL`, which is handled automatically).
+4.  **Deploy**: Railway will detect the `Dockerfile` and automatically build and deploy your application. The `prestart` script in `package.json` will run your database migrations on every new deployment.
+5.  **Update Domain**: Once deployed, update your `NEXTAUTH_URL` and `NEXT_PUBLIC_SITE_URL` environment variables to match your public Railway domain.
 
-1.  **Connect Your Repo**: Connect your GitHub repository to a new project on Railway.
-2.  **Add Database**: Add a PostgreSQL service to your project. Railway will automatically inject the `DATABASE_URL` environment variable into your application's service.
-3.  **Set Environment Variables**: In your service settings, navigate to the "Variables" tab and add all the required environment variables from the `.env.example` file.
-4.  **Deploy**: Railway will automatically detect the `Dockerfile` and build and deploy your application. The `prestart` script in `package.json` will handle database migrations automatically on every new deployment.
-5.  **Update URLs**: Once your application has a public domain, make sure to update the `NEXTAUTH_URL` and `NEXT_PUBLIC_SITE_URL` environment variables to match.
+### Deploying to Vercel
+
+For detailed instructions on deploying to Vercel, see our [Vercel Deployment Guide](./docs/DEPLOY.md). Note that you will need to connect to an external database provider, such as Railway or Neon.
 
 ## Documentation
 
 For more detailed information about the project, please refer to the documentation in the `docs/` directory:
 
--   [**Architecture Overview**](./docs/ARCHITECTURE.md): A high-level look at the project's structure and data flows.
--   [**Security Measures**](./docs/SECURITY.md): An outline of the security practices implemented.
--   [**Deployment Guide**](./docs/DEPLOY.md): Instructions for deploying the project to Vercel.
+-   [**Architecture Overview**](./docs/ARCHITECTURE.md)
+-   [**Security Measures**](./docs/SECURITY.md)
+-   [**Deployment Guide**](./docs/DEPLOY.md)
+-   [**Contributing Guide**](./docs/CONTRIBUTING.md)
+-   [**Changelog**](./docs/CHANGELOG.md)
 
 ## Available Scripts
 
-This project includes a variety of scripts to aid in development and quality control:
-
 -   `pnpm dev`: Starts the development server.
+-   `pnpm dev-seed`: Migrates, seeds, and starts the dev server.
 -   `pnpm build`: Builds the application for production.
--   `pnpm analyze`: Builds the app and opens the bundle analyzer.
 -   `pnpm check`: Runs linting, type checking, and unit tests.
--   `pnpm test`: Runs unit tests.
--   `pnpm test:ui`: Opens the Vitest UI for interactive testing.
--   `pnpm e2e`: Runs end-to-end tests with Playwright.
--   `pnpm e2e:headed`: Runs E2E tests in headed mode.
--   `pnpm db:*`: A set of scripts for managing the database (e.g., `db:migrate`, `db:seed`).
--   `pnpm blog:*`: Scripts for validating blog content (`blog:check`, `blog:dev`).
+-   `pnpm db:*`: Scripts for managing the database.
+-   `pnpm blog:*`: Scripts for validating blog content.
 
-## Quality Assurance: CI-Only Workflow
+## Quality Assurance
 
-This project maintains code quality through a **CI-only workflow**. There are no pre-commit or pre-push hooks configured locally. Instead, all code is validated on the CI server when you push a branch or open a pull request. The CI pipeline runs linting, type checking, unit tests, E2E tests, and content validation to ensure the codebase remains healthy.
+This project uses a **CI-only workflow** via GitHub Actions. All pull requests are automatically validated for code quality, ensuring the `main` branch is always stable.
